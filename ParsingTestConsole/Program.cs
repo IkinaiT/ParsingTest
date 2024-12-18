@@ -21,35 +21,7 @@ var result = await client.Request("events", "listBase")
 
 long lastVersion = 0;
 
-foreach(var ev in result.Events)
-{
-    var tempEvent = context.Events.FirstOrDefault(_ =>  _.Id == ev.Id);
-    if(tempEvent != null)
-    {
-        if(tempEvent != ev)
-            tempEvent = ev;
-    }
-    else
-    {
-        context.Events.Add(ev);
-    }
-}
-
-foreach(var sport in result.Sports)
-{
-    var tempSport = context.Sports.FirstOrDefault(_ => _.Id == sport.Id);
-    if (tempSport != null)
-    {
-        if (tempSport != sport)
-            tempSport = sport;
-    }
-    else
-    {
-        context.Sports.Add(sport);
-    }
-}
-
-context.SaveChanges();
+SaveToDb(result);
 
 while (true)
 {
@@ -72,8 +44,45 @@ while (true)
 
         Console.WriteLine($"Sports: {tempResult.Sports.Where(_ => _.Kind == "sport").Count()}");
 
+        SaveToDb(tempResult);
+
+        Console.WriteLine("Saved to db");
+
         sw.Stop();
 
         Console.WriteLine($"Total time: {sw.ElapsedMilliseconds}ms");
     }
+}
+
+void SaveToDb(Result result)
+{
+    foreach (var ev in result.Events)
+    {
+        var tempEvent = context.Events.FirstOrDefault(_ => _.Id == ev.Id);
+        if (tempEvent != null)
+        {
+            if (tempEvent != ev)
+                tempEvent = ev;
+        }
+        else
+        {
+            context.Events.Add(ev);
+        }
+    }
+
+    foreach (var sport in result.Sports)
+    {
+        var tempSport = context.Sports.FirstOrDefault(_ => _.Id == sport.Id);
+        if (tempSport != null)
+        {
+            if (tempSport != sport)
+                tempSport = sport;
+        }
+        else
+        {
+            context.Sports.Add(sport);
+        }
+    }
+
+    context.SaveChanges();
 }
