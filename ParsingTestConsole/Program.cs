@@ -51,6 +51,9 @@ while (true)
         sw.Stop();
 
         Console.WriteLine($"Total time: {sw.ElapsedMilliseconds}ms");
+        Console.WriteLine();
+        Console.WriteLine("----------------------------------------------------");
+        Console.WriteLine();
     }
 }
 
