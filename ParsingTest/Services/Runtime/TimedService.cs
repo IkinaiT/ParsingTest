@@ -1,6 +1,7 @@
 ﻿using Flurl.Http;
 using ParsingTest.Models;
 using ParsingTest.Services.Interfaces;
+using System.Diagnostics;
 
 namespace ParsingTest.Services.Runtime
 {
@@ -13,14 +14,14 @@ namespace ParsingTest.Services.Runtime
         public Task StartAsync(CancellationToken stoppingToken)
         {
             _timer = new Timer(async _ => await StartBackgroundTask(), null, TimeSpan.Zero,
-                TimeSpan.FromSeconds(5));
+                TimeSpan.FromSeconds(1));
 
             return Task.CompletedTask;
         }
 
         public async Task StartBackgroundTask()
         {
-            var result = await client.Request("events", "listBase")
+            var result = await client.Request("events", "list")
                 .AppendQueryParam("lang", "ru")
                 .AppendQueryParam("scopeMarket", "1600")
                 .GetAsync()

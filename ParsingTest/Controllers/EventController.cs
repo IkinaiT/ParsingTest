@@ -9,22 +9,23 @@ namespace ParsingTest.Controllers
     [Route("/api/[controller]")]
     public class EventController(IDataBaseService dataBaseService) : Controller
     {
-        private FlurlClient client = new("https://line32w.bk6bba-resources.com");
+        private FlurlClient client = new("https://line08w.bk6bba-resources.com");
         private readonly IDataBaseService _dataBaseService = dataBaseService;
 
         [HttpGet("/{id}")]
-        public IActionResult GetEvent(long id)
+        public async Task<IActionResult> GetEvent(long id)
         {
-            //EventResponce result = new();
+            EventResponce result = new();
 
-            //var temp = await client.Request("events", "event")
-            //    .AppendQueryParam("lang", "ru")
-            //    .AppendQueryParam("scopeMarket", "1600")
-            //    .AppendQueryParam("eventId", id)
-            //    .GetAsync()
-            //    .ReceiveJson<EventResponce>();
+            result = await client.Request("events", "event")
+                .AppendQueryParam("lang", "ru")
+                .AppendQueryParam("version", "0")
+                .AppendQueryParam("eventId", id.ToString())
+                .AppendQueryParam("scopeMarket", "1600")
+                .GetAsync()
+                .ReceiveJson<EventResponce>();
 
-            return Ok(_dataBaseService.GetEvent(id));
+            return Ok(result);
         }
 
         [HttpGet("/Range/Ids")]
